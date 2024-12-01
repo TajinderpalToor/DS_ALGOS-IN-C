@@ -1,0 +1,23 @@
+# include <stdio.h>
+
+int main(){
+/*
+
+// in the last thing we learnt that an array is just a pointer, so the array name is a pointer, example. arr[5], the pointer 
+//arr just points to the entire length array 5, then arr+1, if arr is the entire array, then 
+//arr+1 is arr + plus the length of 
+//the array, arr+1 is the element immediatley after
+
+//&arr is the pointer to the entire array
+//&arr +1 = memory location just past end of arr, which is the mnemory lcoation after the arr, 
+//(*(&arr+1)) dereferences and gives the address of the element just after the array
+
+*/
+int arr [ ] = {2,3,4,5};
+printf("%d\n",arr);
+printf("%d\n",&arr);
+
+
+
+
+}
