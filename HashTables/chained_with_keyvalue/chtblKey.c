@@ -1,7 +1,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <stdio.h>
-# include "list.h"
+# include "../list.h"
 # include "chtblKey.h"
 
 int chtbl_init (CHTbl *htbl, int buckets, int (*h)(const void *key), int (*match)(const void *key1, const void *key2),void (*destroy)(void*data)){
@@ -76,16 +76,8 @@ void chtbl_destroy(CHTbl *htbl){
 
 int chtbl_insert(CHTbl *htbl,void *key, void *value){
 
-    void *temp;
     int bucket;
-    int retval;
-
     bucket=htbl->h(key) % htbl->buckets;
-
-    /*
-    data is a const void* type so do assign temp to data you need to 
-    cast because temp is void*
-    */
 
    // check if the key is in the linkedlist.. ie. traverse the list
    ListElmt *element = list_head(&htbl->table[bucket]);
@@ -99,75 +91,26 @@ int chtbl_insert(CHTbl *htbl,void *key, void *value){
     }
     element=list_next(element);
    }
-
-  
-
    // key does not exsist in that linkedlist 
-
    keyvaluepair *newpair = (keyvaluepair *)malloc(sizeof(keyvaluepair));
    if(newpair ==NULL){
     return -1; // memory not created properly
    }
-
    newpair->key=key;
    newpair->value=value;
-
     // insert the data into the bucket
-
     if((list_ins_next(&htbl->table[bucket],NULL,newpair))!=0){
         // insert failed
         free(newpair);
         return -1;
     }
     htbl->size++;
-
-    return retval;
-
-}
-
-// chtbl_remove
-
-int chtbl_remove(CHTbl *htbl, void **data){
-
-    ListElmt    *element;
-    ListElmt    *prev;
-
-    int         bucket;
-
-    // hash the key 
-
-    bucket = htbl->h(*data) % htbl->buckets;
-
-    //search for the data in the bucket 
-
-    for(element=list_head(&htbl->table[bucket]);element !=NULL;element=list_next(element)){
-
-        // traverse the list 
-        // use double pointer because you may remove head 
-        if (htbl->match(*data,list_data(element))){
-            // remove the data from the bucket
-
-            if(list_rem_next(&htbl->table[bucket],prev,data)==0){
-                // NEED A DOUBLE POINTER HERE B/C MAY DELETE VALUE SO NEED TO MODIFY IT
-                htbl->size--;
-                return 0;
-            }
-
-            else{
-                return -1;
-            }
-        }
-            prev = element;
-
-    }
-    
-    // return that the data was not found
-    return -1;
+    return 0;
 }
 
 // chtbl lookup
 
-int chtbl_lookup(const CHTbl *htbl, void *key){
+void *chtbl_lookup(const CHTbl *htbl, void *key){
     int bucket;
     // hash the key 
     bucket=htbl->h(key) %htbl->buckets;
@@ -179,10 +122,8 @@ while (element !=NULL){
     if(htbl->match(pair->key,key)){
         return pair-> value;
     }
-
-            element = list_next(element);
-
-}
+    element = list_next(element);
+    }
 // data not found 
 return NULL;
 }
@@ -213,7 +154,6 @@ while(element!=NULL){
             if(htbl->destroy !=NULL){
                 htbl->destroy(data);
             }
-            free(data);
             htbl ->size--;
             return 0;
         }
@@ -230,122 +170,91 @@ while(element!=NULL){
     element = list_next(element);
 }
 
-
-
-
 }
 
-
-
-
-
-// main function
-
-int match_function (const void *key1, const void *key2){
+// Define hash and match functions for strings
+int string_hash(const void *key) {
+    const char *str = (const char *)key;
+    int hash = 0;
+    while (*str) {
+        hash = (hash * 31 + *str) % 1000000007;
+        str++;
+    }
+    return hash;
+}
+// match function
+int string_match (const void *key1, const void *key2){
     /* convert to an integer pointer and then dereference to get the int value and then compare*/
-    return *(int*)key1 == *(int *)key2;
+        return strcmp((const char *)key1, (const char *)key2) == 0;
 }
 
-void destroy_function(void *data){
-    free(data);
+// destroy pair 
+void destroy_pair(void *data) {
+    keyvaluepair *pair = (keyvaluepair *)data;
+    free(pair->key);
+    free(pair->value);
 }
-
 
 // Function to print the hash table
-void print_hash_table(const CHTbl *htbl, void (*print_data)(const void *data)) {
+void chtbl_print(const CHTbl *htbl, void (*print_pair)(const keyvaluepair *)) {
     printf("Hash Table (size = %d, buckets = %d):\n", htbl->size, htbl->buckets);
+
     for (int i = 0; i < htbl->buckets; i++) {
         printf("Bucket %d: ", i);
+
         ListElmt *element = list_head(&htbl->table[i]);
         while (element != NULL) {
-            print_data(list_data(element)); // Call the user-defined print function
-            element = list_next(element);
+            keyvaluepair *pair = (keyvaluepair *)list_data(element);
+            print_pair(pair); // Call the user-provided function to print the key-value pair
+            element = list_next(element); // Move to the next node
         }
+
         printf("\n");
     }
 }
 
-// User-defined print function for integers
-void print_int(const void *data) {
-    printf("%d -> ", *(int *)data); // Print integer data
-}
- 
+ void print_key_value_pair(const keyvaluepair *pair) {
+    printf("(%s -> %s) ", (char *)pair->key, (char *)pair->value);
+ }
+
 int main() {
 
 // declare the hash table
 CHTbl htbl;
 
 // total number of buckets in the hash table
-int buckets =10;
+int buckets =5;
 
-// initalize the hash table
+// initalize the hash table - doesnt return 0 then it fails to intialize
 
-if(chtbl_init(&htbl, buckets, hash_function, match_function,destroy_function)!=0){
-    // doesnt return 0 then it fails to intialize
-
-// chtbl *htbl is a pointer to type chtbl, therefore to get the pointer value do &htbl
-// function name is a pointer itself, kinda like how array name is a pointer
-
-fprintf(stderr,"Failed to initialize\n");
-return EXIT_FAILURE;
+if(chtbl_init(&htbl, buckets, string_hash, string_match,destroy_pair)!=0){
+    fprintf(stderr,"Failed to initialize\n");
+    return EXIT_FAILURE;
 }
 
-// insert elements 
+// insert  key - value pairs  
+chtbl_insert(&htbl,strdup("name"),strdup("TAJ"));
+chtbl_insert(&htbl,strdup("Age"),strdup("26"));
+chtbl_insert(&htbl,strdup("city"),strdup("toronto"));
+chtbl_insert(&htbl,strdup("Gender"),strdup("Female"));
 
-int *data1=malloc(sizeof(int));
-*data1=42;
-if(chtbl_insert(&htbl,data1)!=0){
-    fprintf(stderr,"Failed to Insert the data");
-    free(data1);
-}
-
-
-int *data2=malloc(sizeof(int));
-*data2=41;
-if(chtbl_insert(&htbl,data2)!=0){
-    fprintf(stderr,"Failed to Insert the data");
-    free(data2);
-}
-
-
-int *data3=malloc(sizeof(int));
-*data3=111;
-if(chtbl_insert(&htbl,data3)!=0){
-    fprintf(stderr,"Failed to Insert the data");
-    free(data3);
-}
 
 //print the hash table 
-print_hash_table(&htbl, print_int);
+chtbl_print(&htbl, print_key_value_pair);
 
- // Look up an element in the hash table
-    int key = 41;
-    void *found_data = &key;
-    if (chtbl_lookup(&htbl, &found_data) == 0) {
-        printf("Found data: %d\n", *(int *)found_data);
-    } else {
-        printf("Data not found.\n");
-    }
+//lookup a key
+char *key ="name";
+printf("\nLooking up '%s': %s\n", key, (char *)chtbl_lookup(&htbl, key));
 
-    //print the hash table 
-print_hash_table(&htbl, print_int);
+// Remove a key
+printf("\nRemoving 'Age'\n");
+chtbl_remove(&htbl, "Age");
+chtbl_print(&htbl, print_key_value_pair);
 
+// Destroy the hash table
+chtbl_destroy(&htbl);
 
- // Remove an element from the hash table
-    found_data = &key;
-    if (chtbl_remove(&htbl, &found_data) == 0) {
-        printf("Removed data: %d\n", *(int *)found_data);
-        free(found_data);
-    } else {
-        printf("Failed to remove data.\n");
-    }
-
-    print_hash_table(&htbl, print_int);
-
-    // Destroy the hash table
-    chtbl_destroy(&htbl);
-
-    return EXIT_SUCCESS;
+return 0;
 
 
 }
