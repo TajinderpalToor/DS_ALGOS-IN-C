@@ -1,0 +1,161 @@
+node organized in a hierecheal arrangment
+top node = root
+below root are children
+each child except the root has a parent which is the node above it
+branching factor = number of children from a parent 
+
+
+Binary Search Tree:
+
+-> this has a branching factor of 2
+-> good for data that will have insertions and deletions 
+-> descendants of a node = children
+-> siblings
+-> ancestors = are all nodes along the path between it and root(grand parents and great grandparents maybe??)
+-> each node has a left pointer, right pointer and data 
+-> branch = root to node path 
+-> leaf nodes are at the bottom and ones with no children
+-> 
+
+------------------------------
+Applications:
+
+Huffman Coding = data compression where more frequent symbols are short codes and less frequent symbols is longer codes
+    -> assigning codes to symbols 
+
+Expression processing = used by compilers and calcualtors 
+
+-----------------------------
+
+Traversal Method:
+
+
+Preorder traversal:
+-> start at root, choose left or right
+-> then choose left or right, whatever you  choose for step 1
+-< keep going till leaf recursivley, then go to right subtree
+
+     A
+    / \
+   B   C
+  / \   \
+ D   E   F
+
+ Pre-order traversal:
+Visit A
+
+Go left → Visit B
+
+Go left → Visit D
+
+D has no children, go back to B
+
+Go right from B → Visit E
+
+E has no children, go back to A
+
+Go right from A → Visit C
+
+C has no left, go right → Visit F
+
+Result: A, B, D, E, C, F
+
+Inorder Traversal:
+-> traverse to left, then to the root from a given subtree node
+-> as you explore left and right, use the left or right node as the root of subtree
+-> basically start at root go left, till you hit the leaf and there is no more
+left that means that is the first location, then backtrack from there till its root(ie. the leafs root) then go to right 
+
+
+     A
+    / \
+   B   C
+  / \   \
+ D   E   F
+
+Step-by-step Traversal:
+Start at A → go left to B
+
+At B → go left to D
+
+D has no left → visit D
+
+D has no right → backtrack to B
+
+Back at B → visit B
+
+Go right from B to E
+
+E has no left → visit E
+
+E has no right → backtrack to A
+
+Back at A → visit A
+
+Go right to C
+
+C has no left → visit C
+
+Go right to F → F has no left → visit F
+
+F has no right → done
+
+In-order result: D, B, E, A, C, F
+
+Postorder travelsal:
+-> first go to the left subtree traverse then the right subtree
+- go to root of left - thats first traversal, then go to parent and go to right subtree leaf, then come back to its parent, then go to right Tree
+
+- after you have travered to leaf visit it, then when that subtree is done and you get back to parent visit it
+
+
+Post-order traversal order:
+Traverse left subtree
+
+Traverse right subtree
+
+Visit the current node
+
+Step-by-step Post-order Traversal:
+Start at A → go left to B
+
+At B → go left to D
+
+D has no children → visit D
+
+Back to B → go right to E
+
+E has no children → visit E
+
+Back to B → visit B
+
+Back to A → go right to C
+
+C has no left → go right to F
+
+F has no children → visit F
+
+Back to C → visit C
+
+Back to A → visit A
+✅ Post-order result:
+D, E, B, F, C, A
+
+Balancing a tree:
+
+- keeping it as short as possible for a given number of nodes
+- one level of node is completely full before using next
+- balanced tree all leafs are at the same level or if not the last two levels are leafs and the second last one is full
+
+        A                   or                
+      /   \
+     B     C
+    / \   / 
+   D   E F   
+
+        A
+      /   \
+     B     C
+    / \   / \
+   D   E F   G
+
