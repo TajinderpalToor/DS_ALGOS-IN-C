@@ -63,7 +63,7 @@ int bitree_ins_left(BiTree *tree, BiTreeNode *node, const void *data) {
     else {
         // normally allow insertion only at the end of a branch
 
-        if (bittree_left(node) != NULL)
+        if (bitree_left(node) != NULL)
             // node already has a left child so return -1
             return -1;
         position = &node->left;  
@@ -72,7 +72,7 @@ int bitree_ins_left(BiTree *tree, BiTreeNode *node, const void *data) {
 
         // allocate storage for the node
 
-        if((new_node =(BiTreeNode *)malloc(sizeof(BiTreeNode)) == NULL))
+        if((new_node =(BiTreeNode *)malloc(sizeof(BiTreeNode))) == NULL)
             return -1;
         
         // insert the node into the tree.
@@ -114,7 +114,7 @@ int bitree_ins_right(BiTree *tree, BiTreeNode *node, const void *data) {
 
     //allocate storage for the node
     
-        if((new_node =(BiTreeNode *)malloc(sizeof(BiTreeNode)) == NULL))
+        if((new_node =(BiTreeNode *)malloc(sizeof(BiTreeNode))) == NULL)
             return -1;
 
     // insert the new node into the tree
@@ -140,7 +140,7 @@ void bitree_rem_left(BiTree *tree, BiTreeNode *node){
 
     // determine where to remove the nodes
 
-    if(node = NULL)
+    if(node == NULL)
         position=&tree->root;
     
     else
@@ -180,7 +180,7 @@ void bitree_rem_right(BiTree *tree, BiTreeNode *node){
 
     // determine where to remove the nodes
 
-    if(node = NULL)
+    if(node == NULL)
         position=&tree->root;
     
     else
