@@ -138,39 +138,34 @@ will maybe messs up the mapping, this way keeping them two seperate functions yo
 
 // removal
 
-int chtbl_remove (CHTbl *htbl, void *key){
-    int bucket = htbl->h(key)%htbl->buckets;
-    ListElmt *element=list_head(&htbl->table[bucket]);
-    ListElmt *prev=NULL;
+int chtbl_remove(CHTbl *htbl, void *key) {
+    int bucket = htbl->h(key) % htbl->buckets;
+    ListElmt *element = list_head(&htbl->table[bucket]);
+    ListElmt *prev = NULL;
 
-// traverse the bucket to find the key
-
-while(element!=NULL){
-    keyvaluepair *pair = (keyvaluepair *)list_data(element);
-    if(htbl->match(pair->key,key)) {
-        // if you find the key you gotta remove it - basically like linkedlist removal
-        void *data;
-        if(list_rem_next(&htbl->table[bucket],prev,data)==0){
-            if(htbl->destroy !=NULL){
-                htbl->destroy(data);
+    // Traverse the bucket to find the key
+    while (element != NULL) {
+        keyvaluepair *pair = (keyvaluepair *)list_data(element);
+        if (htbl->match(pair->key, key)) {
+            // Key found, remove it
+            void *data = NULL;
+            if (list_rem_next(&htbl->table[bucket], prev, &data) == 0) {
+                if (htbl->destroy != NULL) {
+                    htbl->destroy(data);
+                }
+                htbl->size--;
+                return 0;
+            } else {
+                return -1; // Removal failed
             }
-            htbl ->size--;
-            return 0;
         }
-
-        else {
-            //removal failed 
-            return -1;
-        }
+        prev = element;
+        element = list_next(element);
     }
-    // this is not actually part of the list_rem_next
-    /*
-    its just to help with storing the next node and the prev of that element    */
-    prev = element;
-    element = list_next(element);
+
+    return -1; // Key not found
 }
 
-}
 
 // Define hash and match functions for strings
 int string_hash(const void *key) {
