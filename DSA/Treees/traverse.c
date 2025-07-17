@@ -8,7 +8,7 @@ Inorder Traversal Left Node Right
 PostOrder Traversal Left Right Node
 */
 
-# include "list.h"
+# include "../list.h"
 # include "traverse.h"
 
 // Preoder

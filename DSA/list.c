@@ -169,6 +169,8 @@ int list_rem_next(List *list,ListElmt *element, void**data){
 
 // need to make a print function 
 
+/*
+
 void print_list(List *list){
     ListElmt *current = list->head;
     while(current != NULL){
@@ -176,12 +178,19 @@ void print_list(List *list){
         current=current->next;
     }
 }
+
+*/
 // need to make a user defined destroy function
 
 void data_destroy(void *data) {
     free(data);
 }
 
+/*
+ Removing main function here so I can use it in other codes
+*/
+
+/*
 int main() {
 
 List myList;
@@ -208,6 +217,8 @@ ListElmt *fourthElement = thirdElement->next;
 data = *data alrerady a pointer
 using &(*data) gives you the address of the pointer which is a pointer to a pointer
 */
+
+/*
 void *data;
 list_rem_next(&myList,secondElement,&data);
 printf("\n");
@@ -228,3 +239,5 @@ print_list(&myList);
 printf("\n");
 printf("\n");
 }
+
+*/
