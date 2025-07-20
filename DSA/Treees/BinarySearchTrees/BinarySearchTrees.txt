@@ -1,0 +1,51 @@
+binary trees organized specifically for searching
+start at the root and then go level by level until you find your node
+if the node is greater than your desired go left
+so left is values decrease, right is values increase
+
+- O(lg n), n is the number of nodes in tree is the worst case, if the tree is balanced
+- balance means shprt as possible tree for the given number of nodes
+
+- as the tree becomes more and more unbalanced it becomes O(n)
+
+
+Implementation and Analysis of Binary Search Trees:
+
+- hard to keep tree balanced but one method is to keep it as a
+AVL TREE ( ADELSON VELSKII AND LANDIS)
+
+AVL Tree:
+- stores a extra peice of information called the balance factor 
+- balance factor is the height of the subtree rooted at its left child minus the height of the subtree routed at its right child
+- nodes inserted so changes from +1,-1 or 0
+- 0 balance factor is balanced 
+- there total left levels - total right level
+- if the balance factor becomes + or - 2 then you have to rebalance by rotating
+
+Rotations:
+-  maintains left is smaller than parent and parent is smaller than right
+- after rotation you can get +1,-1,0
+- 4 rotations: left-left, left-right, right-right, right-left 
+
+LL rotation:
+-  left-left rotation
+- x lies in the left subtree of the left subtree, let left be left child of A
+- we set the left pointer of A to the right child of left, the right pointer of left to
+A, and the pointer referencing A
+
+LR Rotation:
+- left-right rotation
+- X or what you  insert lies in the right subtree of the left subtree of A
+- left = left child of A
+- grandchild = right child of left
+- we set the right child of left to the left child of grandchild, the left child of grandchild to left, the left child of A to
+the right child of grandchild, the right child of grandchild
+
+
+RL rotation:
+- left subtree of the right subtree of A
+- symmetric to LR
+Let right be the right
+child of A and grandchild be the left child of right. To perform an RL rotation, we
+set the left child of right to the right child of grandchild, the right child of grandchild to right, the right child of A to the left child of grandchild, the left child of
+grandchild to A, and finally the pointer referencing A to grandchild.
