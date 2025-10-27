@@ -7,7 +7,7 @@
 #ifndef TRAVERSE_H
 #define TRAVERSE_H
 #include <stdlib.h>
-#include "list.h"
+#include "../list.h"
 #include "bitree.h"   /* for BiTreeNode and bitree_is_eob, bitree_left/right */
 
 	/* Load the list with a preorder listing of the tree rooted at node. */

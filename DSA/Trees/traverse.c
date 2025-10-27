@@ -4,7 +4,7 @@
  *							      *
  *  **********************************************************/
 
-#include "list.h"
+#include "../list.h"
 #include "traverse.h"
 
 // PREORDER -> NODE LEFT RIGHT
